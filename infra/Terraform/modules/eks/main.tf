@@ -1,4 +1,4 @@
-# IAM role for EKS cluster
+# IAM role for the EKS cluster
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.project_name}-eks-cluster-role"
   assume_role_policy = jsonencode({
@@ -11,35 +11,40 @@ resource "aws_iam_role" "eks_cluster_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSClusterPolicy" {
+# Attach cluster policy
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
   role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# Security group for cluster
+# Security group for cluster communication
 resource "aws_security_group" "eks_cluster_sg" {
   name        = "${var.project_name}-eks-cluster-sg"
   description = "Cluster communication"
-  vpc_id      = aws_vpc.main.id
-  tags        = { Name = "${var.project_name}-eks-cluster-sg" }
+  vpc_id      = var.vpc_id
 }
 
-# EKS cluster
+# EKS cluster itself
 resource "aws_eks_cluster" "cluster" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
-    subnet_ids         = [aws_subnet.public_a.id, aws_subnet.public_b.id]
+    subnet_ids         = var.subnet_ids
     security_group_ids = [aws_security_group.eks_cluster_sg.id]
   }
 
-  # Enable OIDC for service accounts later (needed for IRSA)
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy]
-  tags       = { Project = var.project_name }
+  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
 }
 
-# IAM role for node group
+# OIDC provider for IRSA
+resource "aws_iam_openid_connect_provider" "eks" {
+  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = ["9e99a48a9960b14926bb7f3b02e22da0afd10df3"] # AWS root CA thumbprint
+}
+
+# IAM role for worker nodes
 resource "aws_iam_role" "eks_node_role" {
   name = "${var.project_name}-eks-node-role"
   assume_role_policy = jsonencode({
@@ -52,17 +57,20 @@ resource "aws_iam_role" "eks_node_role" {
   })
 }
 
+# Attach required policies to node role
 resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
-resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
-  role       = aws_iam_role.eks_node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
+
 resource "aws_iam_role_policy_attachment" "node_AmazonEKS_CNI_Policy" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 # Managed node group
@@ -70,7 +78,7 @@ resource "aws_eks_node_group" "ng" {
   cluster_name    = aws_eks_cluster.cluster.name
   node_group_name = "${var.project_name}-ng"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = [aws_subnet.public_a.id, aws_subnet.public_b.id]
+  subnet_ids      = var.subnet_ids
 
   scaling_config {
     desired_size = var.desired_capacity
@@ -80,5 +88,9 @@ resource "aws_eks_node_group" "ng" {
 
   instance_types = [var.node_instance_type]
 
-  tags = { Project = var.project_name }
+  depends_on = [
+    aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly
+  ]
 }

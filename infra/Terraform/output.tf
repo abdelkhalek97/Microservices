@@ -1,15 +1,11 @@
-output "region" {
-  value = var.region
-}
-
-output "ecr_repository_url" {
-  value = aws_ecr_repository.repo.repository_url
-}
-
 output "cluster_name" {
-  value = aws_eks_cluster.cluster.name
+  value = module.eks.cluster_name
 }
 
 output "vpc_id" {
-  value = aws_vpc.main.id
+  value = module.vpc.vpc_id
+}
+
+output "ecr_repository_url" {
+  value = module.ecr.repository_url
 }

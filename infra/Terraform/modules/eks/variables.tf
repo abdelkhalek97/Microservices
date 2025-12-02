@@ -1,0 +1,10 @@
+variable "project_name" { type = string }
+variable "cluster_name" { type = string }
+variable "region"       { type = string }
+variable "vpc_id"       { type = string }
+variable "subnet_ids"   { type = list(string) }
+
+variable "desired_capacity" { type = number }
+variable "max_capacity"     { type = number }
+variable "min_capacity"     { type = number }
+variable "node_instance_type" { type = string }
