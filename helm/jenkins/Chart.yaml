@@ -1,0 +1,10 @@
+apiVersion: v2
+name: jenkins
+description: A Helm chart for Jenkins (wrapper)
+type: application
+version: 0.1.0
+appVersion: "2.528.2"
+dependencies:
+  - name: jenkins
+    version: 5.8.110
+    repository: https://charts.jenkins.io

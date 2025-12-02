@@ -1,0 +1,10 @@
+controller:
+  image: jenkins/jenkins:lts
+  serviceType: LoadBalancer
+  adminUser: admin
+  adminPassword: admin123
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClass: gp2
