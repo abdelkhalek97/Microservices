@@ -1,6 +1,6 @@
 variable "project_name" {
   type        = string
-  default     = "pwc_python"
+  default     = "pwc-python"
 }
 
 variable "region" {
@@ -10,7 +10,7 @@ variable "region" {
 
 variable "cluster_name" {
   type        = string
-  default     = "eks-pwc_python"
+  default     = "eks-pwc-python"
 }
 
 variable "node_instance_type" {
