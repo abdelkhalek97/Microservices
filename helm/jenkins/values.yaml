@@ -7,6 +7,6 @@ controller:
 persistence:
   enabled: true
   size: 1Gi
-  storageClass: gp3
+  storageClass: gp2
 
 serviceType: LoadBalancer
