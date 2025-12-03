@@ -24,5 +24,3 @@ persistence:
   enabled: true
   size: 1Gi
   storageClass: gp3
-
-serviceType: LoadBalancer
