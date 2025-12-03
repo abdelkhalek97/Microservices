@@ -1,8 +1,10 @@
 controller:
   image: jenkins/jenkins:lts
-  serviceType: LoadBalancer
   adminUser: admin
   adminPassword: admin123
+  serviceType: LoadBalancer 
+  servicePort: 8080           # external port
+  targetPort: 8080            # container port
 
   podSecurityContext:
     fsGroup: 1000
