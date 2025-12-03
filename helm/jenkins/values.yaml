@@ -2,23 +2,22 @@ controller:
   image: jenkins/jenkins:lts
   adminUser: admin
   adminPassword: admin123
-  serviceType: LoadBalancer 
-  servicePort: 8080           # external port
-  targetPort: 8080            # container port
-  agentListenerServiceType: LoadBalancer   # expose agent port externally if needed
+
+  serviceType: LoadBalancer
+  servicePort: 8080
+  targetPort: 8080
+  agentListenerServiceType: LoadBalancer
   agentListenerPort: 50000
-  
+
   podSecurityContext:
     fsGroup: 1000
   containerSecurityContext:
     runAsUser: 1000
     runAsGroup: 1000
 
-  # Custom init-container to fix volume permissions
   customInitContainers:
     - name: fix-permissions
       image: busybox
-      imagePullPolicy: IfNotPresent
       command: ["sh", "-c", "chown -R 1000:1000 /var/jenkins_home"]
       volumeMounts:
         - name: jenkins-home
