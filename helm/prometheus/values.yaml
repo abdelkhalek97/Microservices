@@ -6,7 +6,7 @@ grafana:
 
 prometheus:
   service:
-    type: ClusterIP
+    type: LoadBalancer
 
 alertmanager:
   enabled: true
@@ -22,3 +22,10 @@ serviceMonitors:
       - port: 5000
         path: /metrics
 
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
