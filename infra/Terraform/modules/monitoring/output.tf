@@ -1,3 +1,3 @@
-output "cloudwatch_agent_release" {
-  value = helm_release.cloudwatch.name
+output "cloudwatch_addon_name" {
+  value = aws_eks_addon.cloudwatch_observability.addon_name
 }

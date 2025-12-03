@@ -94,3 +94,8 @@ resource "aws_eks_node_group" "ng" {
     aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly
   ]
 }
+
+resource "aws_iam_role_policy_attachment" "cwagent_node" {
+  role       = aws_iam_role.eks_node_role.name   # <-- your node IAM role
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}

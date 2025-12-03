@@ -36,8 +36,7 @@ module "helm_ebs_csi" {
 }
 
 module "monitoring" {
-  source         = "./modules/monitoring"
-  cluster_name   = module.eks.cluster_name
-  region         = var.region
-  node_role_name = module.eks.node_role_name
+  source       = "./modules/monitoring"
+  cluster_name = module.eks.cluster_name
 }
+

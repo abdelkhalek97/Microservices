@@ -23,3 +23,8 @@ output "oidc_provider_url" {
 output "node_role_name" {
   value = aws_iam_role.eks_node_role.name
 }
+
+resource "aws_iam_role_policy_attachment" "cwagent" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
