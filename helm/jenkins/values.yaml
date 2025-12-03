@@ -1,29 +1,16 @@
-controller:
-  image: jenkins/jenkins:lts
-  adminUser: admin
-  adminPassword: admin123
+jenkins:
+  controller:
+    image: jenkins/jenkins:lts
+    adminUser: admin
+    adminPassword: admin123
 
-  serviceType: LoadBalancer
-  servicePort: 8080
-  targetPort: 8080
-  agentListenerServiceType: LoadBalancer
-  agentListenerPort: 50000
+    serviceType: LoadBalancer
+    servicePort: 8080
+    targetPort: 8080
 
-  podSecurityContext:
-    fsGroup: 1000
-  containerSecurityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-
-  customInitContainers:
-    - name: fix-permissions
-      image: busybox
-      command: ["sh", "-c", "chown -R 1000:1000 /var/jenkins_home"]
-      volumeMounts:
-        - name: jenkins-home
-          mountPath: /var/jenkins_home
-
-persistence:
-  enabled: true
-  size: 1Gi
-  storageClass: gp3
+    agentListenerServiceType: LoadBalancer
+    agentListenerPort: 50000
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: gp3
