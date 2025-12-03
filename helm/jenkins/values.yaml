@@ -5,7 +5,9 @@ controller:
   serviceType: LoadBalancer 
   servicePort: 8080           # external port
   targetPort: 8080            # container port
-
+  agentListenerServiceType: LoadBalancer   # expose agent port externally if needed
+  agentListenerPort: 50000
+  
   podSecurityContext:
     fsGroup: 1000
   containerSecurityContext:
