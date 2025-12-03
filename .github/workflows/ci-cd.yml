@@ -1,0 +1,46 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-west-2
+      REGISTRY: 713608733208.dkr.ecr.us-west-2.amazonaws.com
+      IMAGE: microservices
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | \
+            docker login --username AWS --password-stdin $REGISTRY
+
+      - name: Build Docker image
+        run: |
+          docker build -t $REGISTRY/$IMAGE:${{ github.run_number }} .
+
+      - name: Push Docker image
+        run: |
+          docker push $REGISTRY/$IMAGE:${{ github.run_number }}
+
+      - name: Update Helm values
+        run: |
+          sed -i "s/tag:.*/tag: ${{ github.run_number }}/" helm/flask-app/values.yaml
+          git config user.name "github-actions"
+          git config user.email "ci@github.com"
+          git commit -am "Update image tag to ${{ github.run_number }}"
+          git push
