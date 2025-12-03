@@ -1,6 +1,11 @@
 jenkins:
   controller:
-    image: jenkins/jenkins:lts
+    image:
+      registry: docker.io
+      repository: jenkins/jenkins
+      tag: lts
+      pullPolicy: Always
+
     adminUser: admin
     adminPassword: admin123
 
