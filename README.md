@@ -57,8 +57,8 @@ GitHub Actions pipeline performs:
 
 Triggers on changes to:
 
--   \`flask-app/\*\*\`
--   \`Dockerfile\`
+-   `flask-app/**`
+-   `Dockerfile`
 -   Workflow YAML files
 
 ## 📊 Monitoring & Observability
