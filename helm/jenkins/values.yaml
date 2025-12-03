@@ -6,8 +6,9 @@ jenkins:
       tag: lts
       pullPolicy: Always
 
-    adminUser: admin
-    adminPassword: admin123
+    admin:
+      username: admin
+      password: admin123
 
     serviceType: LoadBalancer
     servicePort: 8080
