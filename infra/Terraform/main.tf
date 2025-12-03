@@ -34,3 +34,10 @@ module "helm_ebs_csi" {
   source               = "./modules/helm-ebs-csi"
   service_account_name = module.iam_ebs_csi.service_account_name
 }
+
+module "monitoring" {
+  source         = "./modules/monitoring"
+  cluster_name   = module.eks.cluster_name
+  region         = var.region
+  node_role_name = module.eks.node_role_name
+}

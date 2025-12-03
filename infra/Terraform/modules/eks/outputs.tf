@@ -19,3 +19,7 @@ output "oidc_provider_arn" {
 output "oidc_provider_url" {
   value = aws_iam_openid_connect_provider.eks.url
 }
+
+output "node_role_name" {
+  value = aws_iam_role.eks_node_role.name
+}
