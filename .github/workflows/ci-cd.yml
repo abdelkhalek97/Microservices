@@ -3,6 +3,12 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'app/**'
+      - 'requirements.txt'
+      - 'run.py'
+      - 'Dockerfile'
+      - '.github/workflows/ci-cd.yaml'
 
 jobs:
   build:
