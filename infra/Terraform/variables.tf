@@ -15,17 +15,17 @@ variable "cluster_name" {
 
 variable "desired_capacity" {
   type    = number
-  default = 2   # how many nodes you want initially
+  default = 3   # how many nodes you want initially
 }
 
 variable "max_capacity" {
   type    = number
-  default = 3   # upper limit for autoscaling
+  default = 4   # upper limit for autoscaling
 }
 
 variable "min_capacity" {
   type    = number
-  default = 1   # minimum nodes to keep
+  default = 2   # minimum nodes to keep
 }
 
 variable "node_instance_type" {

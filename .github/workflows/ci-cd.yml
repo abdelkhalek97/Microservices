@@ -9,6 +9,8 @@ on:
       - 'run.py'
       - 'Dockerfile'
       - '.github/workflows/ci-cd.yaml'
+  workflow_dispatch:
+
 
 jobs:
   build:

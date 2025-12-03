@@ -37,13 +37,14 @@ aws eks update-kubeconfig --region us-west-2 --name eks-pwc-python
 ### 3. Install Argo CD
 
 ```bash 
+cd ../../
 ./argo_install.sh
 ```
 
 ### 4. Deploy Flask App via Helm
 
 ```bash 
-kubectl apply -f helm/flask-app.yaml -n argocd
+kubectl apply -f helm/applications/flask-app.yaml -n argocd
 ```
 
 ## 🔄 CI/CD Workflow
