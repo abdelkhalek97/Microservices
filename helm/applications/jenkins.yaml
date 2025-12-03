@@ -9,6 +9,9 @@ spec:
     repoURL: https://github.com/abdelkhalek97/Microservices.git
     targetRevision: main
     path: helm/jenkins
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins

@@ -15,3 +15,18 @@ resource "helm_release" "ebs_csi_driver" {
     value = var.service_account_name
   }
 }
+resource "kubernetes_storage_class" "ebs_gp3" {
+  metadata {
+    name = "gp3"
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = "true"
+    }
+  }
+
+  storage_provisioner = "ebs.csi.aws.com"
+  volume_binding_mode = "WaitForFirstConsumer"
+
+  parameters = {
+    type = "gp3"
+  }
+}
